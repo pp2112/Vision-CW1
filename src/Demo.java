@@ -8,23 +8,40 @@ public class Demo {
 
 		double[][] probabilities = new double[5][5];
 
-		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 5; j++) {
-				probabilities[i][j] = 1;
-			}
-		}
+		probabilities[0][0] = 0;
+		probabilities[0][1] = 0;
+		probabilities[0][2] = 0;
+		probabilities[0][3] = 0;
+		probabilities[0][4] = 0;
 
+		probabilities[1][0] = 0;
+		probabilities[1][1] = 0.1;
+		probabilities[1][2] = 0.1;
+		probabilities[1][3] = 0.1;
+		probabilities[1][4] = 0;
+
+		probabilities[2][0] = 0;
+		probabilities[2][1] = 0.1;
+		probabilities[2][2] = 0.9;
+		probabilities[2][3] = 0;
+		probabilities[2][4] = 0;
+
+		probabilities[3][0] = 0;
+		probabilities[3][1] = 0.1;
+		probabilities[3][2] = 0;
+		probabilities[3][3] = 0;
+		probabilities[3][4] = 0;
+
+		probabilities[4][0] = 0;
+		probabilities[4][1] = 0;
+		probabilities[4][2] = 0;
+		probabilities[4][3] = 0;
+		probabilities[4][4] = 0;
+
+		probabilities = compute_next_stage(probabilities, 1, 1, 1, 1);
 		for (double[] row : probabilities) {
 			System.out.println(Arrays.toString(row));
 		}
-
-		System.out.println();
-		System.out.println(compute_adj(1, 1, probabilities));
-
-		//
-		// for (int i = 0; i < 2; i++) {
-		// probabilities = compute_next_stage(probabilities, 1, 1, 1, 1);
-		// }
 
 	}
 
@@ -43,15 +60,6 @@ public class Demo {
 		return res;
 	}
 
-	private static double compute_b(double prob_i, int ne_e, int ne_ne,
-			List<Double> adj) {
-		double q = 0;
-		for (Double prob_j : adj) {
-			q += (ne_e * (1 - prob_j) + ne_ne * (prob_j));
-		}
-		return q * prob_i;
-	}
-
 	private static double compute_a(double prob_i, int e_e, int e_ne,
 			List<Double> adj) {
 		double q = 0;
@@ -59,6 +67,15 @@ public class Demo {
 			q += (e_ne * (1 - prob_j) + e_e * (prob_j));
 		}
 		return q * prob_i;
+	}
+
+	private static double compute_b(double prob_i, int ne_e, int ne_ne,
+			List<Double> adj) {
+		double q = 0;
+		for (Double prob_j : adj) {
+			q += (ne_e * prob_j + ne_ne * (1 - prob_j));
+		}
+		return q * (1 - prob_i);
 	}
 
 	private static List<Double> compute_adj(int x, int y, double[][] array) {
